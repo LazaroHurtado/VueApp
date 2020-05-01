@@ -4,15 +4,16 @@
             <router-link to="/" id="Name">Kelp</router-link>
         </header>
         <nav>
-            <router-link to="/login">Login</router-link>
-            <router-link to="/sign-up">Sign Up</router-link>
+            <router-link v-if="!this.$store.state.userAccount.username" to="/sign-up" id="signup">Sign Up</router-link>
+            <router-link v-if="!this.$store.state.userAccount.username" to="/login" id="login">Login</router-link>
+            <router-link v-if="this.$store.state.userAccount.username" to="/login" id="username">Welcome, {{this.$store.state.userAccount.first_name}}</router-link>
         </nav>
     </div>
 </template>
 
 <script>
 export default {
-    name: "Header"
+    name: "Header",
 }
 </script>
 
@@ -22,7 +23,7 @@ export default {
         border-bottom: 5px solid #6DD47E;
         overflow: hidden;
         width: 100%;
-        height: 50px;
+        height: 80px;
         display: flex;
         justify-content: space-between;
     }
@@ -30,6 +31,7 @@ export default {
     nav {
         display: flex;
         align-items: center;
+        padding-right: 10px;
     }
 
     header {
@@ -45,14 +47,18 @@ export default {
         text-align: center;
         padding-left: 10px;
         text-decoration: none;
-        font-size: 30px;
+        font-size: 35px;
     }
 
     nav a {
-        padding: 10px 10px;
+        padding: 8px 10px;
         color: #fff;
         text-align: center;
         text-decoration: none;
+    }
+
+    #login {
+        border: 2px solid #FFD55A;
     }
 
     @font-face {

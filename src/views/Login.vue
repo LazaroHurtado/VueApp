@@ -1,19 +1,36 @@
 <template>
   <div class="container">
     <h1>Login</h1>
-    <form>
+    <form @submit.prevent="login">
         <p>Username</p>
-        <input type="text" name="" placeholder="John Doe">
+        <input type="text" name="" placeholder="John Doe" v-model="username">
         <p>Password</p>
-        <input type="password" name="" placeholder="******">
-        <input type="submit" name="" value="Login">
+        <input type="password" name="" placeholder="******" v-model="password">
+        <input type="submit" name="" value="Login" >
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Login'
+    name: 'Login',
+    data() {
+        return {
+            username: "",
+            password: "",
+        }
+    },
+    methods: {
+        login() {
+            this.$store.dispatch('login', {
+                username: this.username,
+                password: this.password,
+            })
+            .then(setTimeout(() => {
+                this.$router.push({name: "Home"})
+            }, 1000))
+        }
+    }
 }
 </script>
 
