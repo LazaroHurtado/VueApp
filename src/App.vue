@@ -12,6 +12,13 @@ export default {
   name:"app",
   components: {
     Header
+  },
+  created() {
+    if (this.$store.getters.token) {
+      this.$store.dispatch('fetchUser')
+    } else if (this.$store.getters.refreshToken) {
+      this.$store.dispatch('resetTokens')
+    }
   }
 }
 </script>

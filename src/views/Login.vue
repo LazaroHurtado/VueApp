@@ -26,9 +26,12 @@ export default {
                 username: this.username,
                 password: this.password,
             })
-            .then(setTimeout(() => {
+            .then(setTimeout((response) => {
                 this.$router.push({name: "Home"})
             }, 1000))
+            .catch( error => {
+                console.log(error.response)
+            })
         }
     }
 }

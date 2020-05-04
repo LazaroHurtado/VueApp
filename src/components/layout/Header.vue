@@ -4,9 +4,9 @@
             <router-link to="/" id="Name">Kelp</router-link>
         </header>
         <nav>
-            <router-link v-if="!this.$store.state.userAccount.username" to="/sign-up" id="signup">Sign Up</router-link>
-            <router-link v-if="!this.$store.state.userAccount.username" to="/login" id="login">Login</router-link>
-            <router-link v-if="this.$store.state.userAccount.username" to="/login" id="username">Welcome, {{this.$store.state.userAccount.first_name}}</router-link>
+            <router-link v-if="!loggedIn" to="/sign-up" id="signup">Sign Up</router-link>
+            <router-link v-if="!loggedIn" to="/login" id="login">Login</router-link>
+            <router-link v-if="loggedIn" to="/login" id="username">Welcome, {{username}}</router-link>
         </nav>
     </div>
 </template>
@@ -14,6 +14,14 @@
 <script>
 export default {
     name: "Header",
+    computed: {
+        loggedIn() {
+            return this.$store.getters.loggedIn
+        },
+        username() {
+            return this.$store.getters.username
+        }
+    }
 }
 </script>
 
