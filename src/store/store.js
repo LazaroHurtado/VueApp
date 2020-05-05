@@ -43,18 +43,12 @@ export const store = new Vuex.Store({
         destroyToken(state) {
             state.userAccount.token = null
         },
-        fetchUser(state) {
+        fetchData(state) {
             let token = state.userAccount.token
 
-            const config = {
-                headers: {
-                    Authorization: token
-                }
-            }
-            
             let username = jwt_decode(token)['username']
 
-            axios.get('http://localhost:5000/find_user/'+username, config)
+            axios.get('http://localhost:5000/find_user/'+username)
             .then(response => {
                 store.commit("login", response.data)
             })
@@ -68,7 +62,7 @@ export const store = new Vuex.Store({
             Vue.$cookies.set("refresh_token", data.refresh_token, "7d")
             state.userAccount.token = Vue.$cookies.get("token")
             state.userAccount.refreshToken = Vue.$cookies.get("refresh_token")
-            store.dispatch('fetchUser')
+            store.dispatch('fetchData')
         },
         resetTokens(state) {
             let refreshTkn = Vue.$cookies.get("refresh_token")
@@ -79,6 +73,15 @@ export const store = new Vuex.Store({
             })
             .catch(error => {
                 console.log(error)
+            })
+        },
+        findUser(state, username) {
+            axios.get('http://localhost:5000/find_user/'+username)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error.response)
             })
         }
     },
@@ -111,14 +114,17 @@ export const store = new Vuex.Store({
         destroyToken(context) {
             context.commit('destroyToken')
         },
-        fetchUser(context) {
-            context.commit('fetchUser')
+        fetchData(context) {
+            context.commit('fetchData')
         },
         setToken(context, data) {
             context.commit('setToken', data)
         },
         resetTokens(context) {
             context.commit('resetTokens')
+        },
+        findUser(context, username) {
+            context.commit('findUser', username)
         }
     }
 })

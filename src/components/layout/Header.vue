@@ -3,17 +3,25 @@
         <header>
             <router-link to="/" id="Name">Kelp</router-link>
         </header>
+        <div>
+            <Searchbar/>
+        </div>
         <nav>
             <router-link v-if="!loggedIn" to="/sign-up" id="signup">Sign Up</router-link>
             <router-link v-if="!loggedIn" to="/login" id="login">Login</router-link>
-            <router-link v-if="loggedIn" to="/login" id="username">Welcome, {{username}}</router-link>
+            <router-link v-if="loggedIn" to="/profile" id="username">Welcome, {{username}}</router-link>
         </nav>
     </div>
 </template>
 
 <script>
+import Searchbar from '../Searchbar.vue'
+
 export default {
     name: "Header",
+    components: {
+        Searchbar
+    },
     computed: {
         loggedIn() {
             return this.$store.getters.loggedIn
@@ -45,6 +53,7 @@ export default {
     header {
         display: flex;
         align-items: center;
+        padding-right: 10px;
     }
 
     header a{

@@ -15,7 +15,7 @@ export default {
   },
   created() {
     if (this.$store.getters.token) {
-      this.$store.dispatch('fetchUser')
+      this.$store.dispatch('fetchData')
     } else if (this.$store.getters.refreshToken) {
       this.$store.dispatch('resetTokens')
     }
