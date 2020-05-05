@@ -85,16 +85,25 @@ export const store = new Vuex.Store({
     actions: {
         login(context, userInfo) {
             return new Promise((resolve, reject) => {
-                axios.post('http://localhost:5000/login', {
-                username: userInfo.username,
-                password: userInfo.password,
-                })
+                axios.post('http://localhost:5000/login', userInfo)
                 .then(response => {
                     context.commit('login', response.data)
                     resolve(response)
                 })
                 .catch(error => {
                     console.log(error.response);
+                    reject(error)
+                })
+            })
+        },
+        signUp(context, userInfo) {
+            return new Promise((resolve, reject) => {
+                axios.post('http://localhost:5000/create_user', userInfo)
+                .then(response => {
+                    context.commit('login', response.data)
+                    resolve(response)
+                })
+                .catch(error => {
                     reject(error)
                 })
             })
