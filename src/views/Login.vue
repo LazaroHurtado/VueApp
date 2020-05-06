@@ -27,6 +27,7 @@ export default {
                 password: this.password,
             })
             .then(response => {
+                console.log("LOGIN VIEW")
                 console.log(response)
                 setTimeout(() => {
                     this.$router.push({name: "Home"})

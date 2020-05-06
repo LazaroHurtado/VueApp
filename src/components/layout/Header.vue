@@ -9,7 +9,7 @@
         <nav>
             <router-link v-if="!loggedIn" to="/sign-up" id="signup">Sign Up</router-link>
             <router-link v-if="!loggedIn" to="/login" id="login">Login</router-link>
-            <router-link v-if="loggedIn" to="/profile" id="username">Welcome, {{username}}</router-link>
+            <router-link v-if="loggedIn" :to="{path: `/profile/${username}`}" id="username">Welcome, {{username}}</router-link>
         </nav>
     </div>
 </template>

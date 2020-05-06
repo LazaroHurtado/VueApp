@@ -30,7 +30,7 @@ export const store = new Vuex.Store({
         }
     },
     mutations: {
-        login(state, data) {
+        logUser(state, data) {
             if (data.token) {
                 let tokens = data.token
                 Vue.$cookies.set("token", tokens.token, "5MIN")
@@ -48,9 +48,9 @@ export const store = new Vuex.Store({
 
             let username = jwt_decode(token)['username']
 
-            axios.get('http://localhost:5000/find_user/'+username)
+            axios.get(`http://localhost:5000/find_user/${username}`)
             .then(response => {
-                store.commit("login", response.data)
+                store.commit("logUser", response.data)
             })
             .catch(error => {
                 console.log(error.response)
@@ -67,7 +67,7 @@ export const store = new Vuex.Store({
         resetTokens(state) {
             let refreshTkn = Vue.$cookies.get("refresh_token")
             let username = jwt_decode(refreshTkn)['username']
-            axios.get("http://localhost:5000/refresh/"+refreshTkn+"/"+username)
+            axios.get(`http://localhost:5000/refresh/${refreshTkn}/${username}`)
             .then(response => {
                 store.dispatch('setToken', response.data)
             })
@@ -75,22 +75,19 @@ export const store = new Vuex.Store({
                 console.log(error)
             })
         },
-        findUser(state, username) {
-            axios.get('http://localhost:5000/find_user/'+username)
-            .then(response => {
-                console.log(response)
-            })
-            .catch(error => {
-                console.log(error.response)
-            })
+        logout(state) {
+            Vue.$cookies.remove('refresh_token')
+            Vue.$cookies.remove('token')
+            state.userAccount.token = null
+            state.userAccount.refreshToken = null
         }
     },
     actions: {
-        login(context, userInfo) {
+        login(context, data) {
             return new Promise((resolve, reject) => {
-                axios.post('http://localhost:5000/login', userInfo)
+                axios.post('http://localhost:5000/login', data)
                 .then(response => {
-                    context.commit('login', response.data)
+                    context.commit('logUser', response.data)
                     resolve(response)
                 })
                 .catch(error => {
@@ -99,14 +96,26 @@ export const store = new Vuex.Store({
                 })
             })
         },
-        signUp(context, userInfo) {
+        signUp(context, data) {
             return new Promise((resolve, reject) => {
-                axios.post('http://localhost:5000/create_user', userInfo)
+                axios.post('http://localhost:5000/create_user', data)
                 .then(response => {
-                    context.commit('login', response.data)
+                    context.commit('logUser', response.data)
                     resolve(response)
                 })
                 .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        findUser(context, username) {
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/find_user/${username}`)
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log(error.response)
                     reject(error)
                 })
             })
@@ -123,8 +132,8 @@ export const store = new Vuex.Store({
         resetTokens(context) {
             context.commit('resetTokens')
         },
-        findUser(context, username) {
-            context.commit('findUser', username)
+        logout(context) {
+            context.commit('logout')
         }
     }
 })

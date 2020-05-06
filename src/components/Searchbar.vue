@@ -3,7 +3,7 @@
     <button @click='searchUsers' :id="[this.userFocus ? 'activeFriends' : 'friends']">Users</button>
     <button @click='searchShops' :id="[this.shopFocus ? 'activeRes' : 'res']">Shops</button>
     <form @submit.prevent="sendSearch">
-        <input type="text" v-model="search">
+        <input type="text" class="searchbar" v-model="search">
     </form>
   </div>
 </template>
@@ -29,7 +29,9 @@ export default {
         },
         sendSearch() {
             if (this.userFocus) {
-                this.$store.dispatch('findUser', this.search)
+                this.$router.push({path: `/profile/${this.search}`})
+            } else {
+                this.$router.push({path: `/profile/${this.search}`})
             }
         }
     }
@@ -73,6 +75,8 @@ export default {
         height: 22px;
         width: 300px;
         margin-left: 10px;
+        text-align: center;
+        outline: 0;
     }
 
     button:focus {
