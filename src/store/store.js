@@ -27,6 +27,12 @@ export const store = new Vuex.Store({
         },
         username(state) {
             return state.userAccount.data.username
+        },
+        userLocation(state) {
+            return state.userAccount.data.address
+        },
+        userData(state) {
+            return state.userAccount.data || null
         }
     },
     mutations: {
@@ -43,37 +49,12 @@ export const store = new Vuex.Store({
         destroyToken(state) {
             state.userAccount.token = null
         },
-        fetchData(state) {
-            let token = state.userAccount.token
-
-            let username = jwt_decode(token)['username']
-
-            axios.get(`http://localhost:5000/find_user/${username}`)
-            .then(response => {
-                store.commit("logUser", response.data)
-            })
-            .catch(error => {
-                console.log(error.response)
-            })
-        },
         setToken(state, data) {
             Vue.$cookies.remove('refresh_token')
             Vue.$cookies.set("token", data.token, "5MIN")
             Vue.$cookies.set("refresh_token", data.refresh_token, "7d")
             state.userAccount.token = Vue.$cookies.get("token")
             state.userAccount.refreshToken = Vue.$cookies.get("refresh_token")
-            store.dispatch('fetchData')
-        },
-        resetTokens(state) {
-            let refreshTkn = Vue.$cookies.get("refresh_token")
-            let username = jwt_decode(refreshTkn)['username']
-            axios.get(`http://localhost:5000/refresh/${refreshTkn}/${username}`)
-            .then(response => {
-                store.dispatch('setToken', response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
         },
         logout(state) {
             Vue.$cookies.remove('refresh_token')
@@ -120,20 +101,70 @@ export const store = new Vuex.Store({
                 })
             })
         },
-        destroyToken(context) {
-            context.commit('destroyToken')
+        allRestaurants(context) {
+            let config = {
+                headers: {
+                    Authorization: `Bearer ${process.env.YELP_API_KEY}`
+                }
+            }
+            let location = "miami"
+            if (store.getters.userLocation) {
+                location = store.getters.userLocation
+                location = location.replace(/\s/g, '');
+            }
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/find_business/${location}`, config)
+                .then( response => {
+                    console.log('user location used')
+                    resolve(response)
+                })
+                .catch( error => {
+                    reject(error)
+                })
+            })
         },
         fetchData(context) {
-            context.commit('fetchData')
+            let token = store.state.userAccount.token
+    
+            let username = jwt_decode(token)['username']
+
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/find_user/${username}`)
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log(error.response)
+            })
+            })
+        },
+        resetTokens(context) {
+            let refreshTkn = Vue.$cookies.get("refresh_token")
+            let username = jwt_decode(refreshTkn)['username']
+
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/refresh/${refreshTkn}/${username}`)
+                .then(response => {
+                    store.commit('setToken', response.data)
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                    reject(error)
+                })
+            })
+        },
+        destroyToken(context) {
+            context.commit('destroyToken')
         },
         setToken(context, data) {
             context.commit('setToken', data)
         },
-        resetTokens(context) {
-            context.commit('resetTokens')
-        },
         logout(context) {
             context.commit('logout')
+        },
+        logUser(context, data) {
+            context.commit('logUser', data)
         }
     }
 })

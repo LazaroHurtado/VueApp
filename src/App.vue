@@ -16,8 +16,26 @@ export default {
   created() {
     if (this.$store.getters.token) {
       this.$store.dispatch('fetchData')
+      .then(response => {
+        this.$store.dispatch("logUser", response.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
     } else if (this.$store.getters.refreshToken) {
       this.$store.dispatch('resetTokens')
+      .then(response => {
+        this.$store.dispatch('fetchData')
+        .then(response => {
+          this.$store.dispatch("logUser", response.data)
+        })
+        .catch(error => {
+        console.log(error)
+      })
+      })
+      .catch(error => {
+        console.log(error)
+      })
     }
   }
 }

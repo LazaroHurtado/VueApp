@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import SignUp from '../views/SignUp.vue'
 import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
+import Restaurant from '../views/Restaurant'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ Vue.use(VueRouter)
     path: '/profile/:name',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/restaurant/:name',
+    name: 'Restaurant',
+    component: Restaurant
   }
 ]
 
