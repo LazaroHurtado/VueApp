@@ -67,75 +67,69 @@ export const store = new Vuex.Store({
         login(context, data) {
             return new Promise((resolve, reject) => {
                 axios.post('http://localhost:5000/login', data)
-                .then(response => {
-                    context.commit('logUser', response.data)
-                    resolve(response)
-                })
-                .catch(error => {
-                    console.log(error.response);
-                    reject(error)
-                })
+                    .then(response => {
+                        context.commit('logUser', response.data)
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        console.log(error.response);
+                        reject(error)
+                    })
             })
         },
         signUp(context, data) {
             return new Promise((resolve, reject) => {
                 axios.post('http://localhost:5000/create_user', data)
-                .then(response => {
-                    context.commit('logUser', response.data)
-                    resolve(response)
-                })
-                .catch(error => {
-                    reject(error)
-                })
+                    .then(response => {
+                        context.commit('logUser', response.data)
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
             })
         },
         findUser(context, username) {
             return new Promise((resolve, reject) => {
                 axios.get(`http://localhost:5000/find_user/${username}`)
-                .then(response => {
-                    resolve(response)
-                })
-                .catch(error => {
-                    console.log(error.response)
-                    reject(error)
-                })
+                    .then(response => {
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
             })
         },
         allRestaurants(context) {
-            let config = {
-                headers: {
-                    Authorization: `Bearer ${process.env.YELP_API_KEY}`
-                }
-            }
             let location = "miami"
             if (store.getters.userLocation) {
                 location = store.getters.userLocation
                 location = location.replace(/\s/g, '');
             }
             return new Promise((resolve, reject) => {
-                axios.get(`http://localhost:5000/find_business/${location}`, config)
-                .then( response => {
-                    console.log('user location used')
-                    resolve(response)
-                })
-                .catch( error => {
-                    reject(error)
-                })
+                axios.get(`http://localhost:5000/find_businesses/${location}`)
+                    .then(response => {
+                        console.log('user location used')
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
             })
         },
         fetchData(context) {
             let token = store.state.userAccount.token
-    
+
             let username = jwt_decode(token)['username']
 
             return new Promise((resolve, reject) => {
                 axios.get(`http://localhost:5000/find_user/${username}`)
-                .then(response => {
-                    resolve(response)
-                })
-                .catch(error => {
-                    console.log(error.response)
-            })
+                    .then(response => {
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
             })
         },
         resetTokens(context) {
@@ -144,12 +138,55 @@ export const store = new Vuex.Store({
 
             return new Promise((resolve, reject) => {
                 axios.get(`http://localhost:5000/refresh/${refreshTkn}/${username}`)
+                    .then(response => {
+                        store.commit('setToken', response.data)
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        reject(error)
+                    })
+            })
+        },
+        findBusiness(context, id) {
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/find_business/${id}`)
+                    .then(response => {
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+        searchBusiness(context, name) {
+            let location = "miami"
+            if (store.getters.userLocation) {
+                location = store.getters.userLocation
+                location = location.replace(/\s/g, '');
+            }
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/search_business/${name}/${location}`)
+                    .then(response => {
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+        update(context, data) {
+            let config = {
+                headers: {
+                    token: Vue.$cookies.get("token")
+                }
+            }
+            return new Promise((resolve, reject) => {
+                axios.put('http://localhost:5000/auth/update_user', data, config)
                 .then(response => {
-                    store.commit('setToken', response.data)
                     resolve(response)
                 })
                 .catch(error => {
-                    console.log(error)
                     reject(error)
                 })
             })

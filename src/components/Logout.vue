@@ -26,8 +26,6 @@ export default {
 <style scoped>
     .logout {
         display: flex;
-        margin-top: 10px;
-        margin-left: 10px;
     }
 
     #logout {

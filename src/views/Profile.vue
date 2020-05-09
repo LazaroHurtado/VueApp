@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ProfileCard :data='this.data' />
+    <ProfileCard v-if='this.data'  :data='this.data' />
+    <h1 v-else>{{ this.errorData.message }}</h1>
   </div>
 </template>
 
@@ -11,7 +12,8 @@ export default {
     name: 'Profile',
     data() {
         return {
-          data:{}
+          data: {},
+          errorData: {}
         }
     },
     components: {
@@ -28,7 +30,8 @@ export default {
           console.log(this.data)
         })
         .catch(error => {
-          this.data = {}
+          this.data = null
+          this.errorData = error.response.data
           console.log(error)
         })
       }

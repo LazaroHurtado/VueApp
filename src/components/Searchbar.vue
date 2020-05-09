@@ -29,9 +29,11 @@ export default {
         },
         sendSearch() {
             if (this.userFocus) {
+                this.search = this.search.replace(/\s/g, '');
                 this.$router.push({path: `/profile/${this.search}`})
             } else {
-                this.$router.push({path: `/profile/${this.search}`})
+                this.search = this.search.replace(/\s/g, '');
+                this.$router.push({path: `/restaurants/${this.search}`})
             }
         }
     }

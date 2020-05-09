@@ -4,10 +4,10 @@ import router from './router'
 import {store} from './store/store'
 import interceptor from './interceptors'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faUpload, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faStar)
+library.add(faStar, faUpload, faCog)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

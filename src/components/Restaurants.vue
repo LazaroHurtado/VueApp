@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="business in businesses.data" :key="business.id" v-on:click="sendData(business)" class="businessCard">
+    <div v-for="business in businesses.data" :key="business.id" v-on:click="sendData(business.id)" class="businessCard">
       <div class="image">
         <img :src="business.image_url" :alt="business.name" />
       </div>
@@ -13,10 +13,15 @@
           </div>
         </div>
 				<div class="businessInfo">
-          <h2 v-if="business.price">{{ business.price }}</h2>
-					<h2 v-if="business.price && (business.is_closed || !business.is_closed)">-</h2>
-					<h2 v-if="business.is_closed">CLOSED</h2>
-					<h2 v-else>OPEN</h2>
+          <div class="pricestatus">
+            <h2 v-if="business.price">{{ business.price }}</h2>
+            <h2 v-if="business.price && (business.is_closed || !business.is_closed)">-</h2>
+            <h2 v-if="business.is_closed">CLOSED</h2>
+            <h2 v-else>OPEN</h2>
+          </div>
+          <div class="address">
+            <h3>{{ business.location.address1 }}</h3>
+          </div>
         </div>
         <div class="categoriesDiv">
           <div v-for="category in business.categories" :key="category.alias" id="cat">
@@ -31,29 +36,13 @@
 <script>
 export default {
   name: "Restaurants",
-  data() {
-    return {
-      businesses: {}
-    };
+  props: {
+    businesses: Object
   },
   methods: {
-    setData(data) {
-      this.businesses = data;
-      console.log(data);
-		},
-		sendData(data) {
-			this.$router.push({path: `/restaurant/${data.name}`})
+		sendData(id) {
+			this.$router.push({path: `/restaurant/${id}`})
 		}
-  },
-  created() {
-    this.$store
-      .dispatch("allRestaurants")
-      .then(response => {
-        this.setData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
 };
 </script>
@@ -69,12 +58,20 @@ export default {
 	color: white;
 	margin-bottom: 20px;
 	border-radius: 0px 0px 10px 10px;
+  padding-bottom: 10px;
+}
+
+.pricestatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .businessInfo {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+  flex-direction: column;
 }
 
 .image {
@@ -98,7 +95,6 @@ export default {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-	padding-bottom: 20px;
 }
 
 #cat {
@@ -122,7 +118,6 @@ h2 {
 }
 
 h3 {
-  color: #293250;
   margin: 5px 5px;
 }
 
