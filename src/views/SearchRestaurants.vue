@@ -27,17 +27,17 @@ export default {
         })
         .catch(error => {
           this.data = null;
-          this.errorData = error.response.data
+          this.errorData = error.response.data;
           console.log(error);
         });
     }
   },
   created() {
-    this.getData(this.$route.params.name)
+    this.getData(this.$route.params.name);
   },
-  beforeRouteUpdate (to, from, next) {
-      this.getData(to.params.name)
-      next()
-    }
+  beforeRouteUpdate(to, from, next) {
+    this.getData(to.params.name);
+    next();
+  }
 };
 </script>

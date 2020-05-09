@@ -1,29 +1,26 @@
 <template>
-  <div class="update">
-    <button v-on:click="update" id="updatebtn">Update</button>
+  <div class="delete">
+    <button v-on:click="deleteUser" id="deletebtn">Delete Account</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Logout",
+  name: "Delete",
   props: {
-      data: Object,
       username: String
   },
   methods: {
-    update() {
+    deleteUser() {
       this.$store
-        .dispatch("update", {username:this.username, updates:this.data})
+        .dispatch("delete", this.username)
         .then(response => {
-          console.log(response)
-          if (this.data.username) {
-            this.$router.push({ path: `/profile/${this.data.username}` });
-          }
+          console.log(response.data)
+          this.$router.push({ path: `/` });
         })
         .catch(error => {
           console.log(error.response);
-          this.$router.push({ path: `/profile/${this.data.username}` });
+          this.$router.push({ path: `/` });
         });
     }
   }
@@ -31,11 +28,11 @@ export default {
 </script>
 
 <style scoped>
-.update {
+.delete {
   display: flex;
 }
 
-#updatebtn {
+#deletebtn {
   color: #293250;
   text-align: center;
   font-size: 15px;
@@ -45,7 +42,7 @@ export default {
   border: 0;
   outline: 0;
   border-radius: 15px;
-  background: #6dd47e;
+  background: #e04c4c;
 }
 
 button:hover {

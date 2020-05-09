@@ -9,16 +9,16 @@
             <font-awesome-icon icon="star" id="star" />
           </div>
         </div>
-				<div class="businessInfo">
-					<div class="pricestatus">
-						<h2 v-if="business.price">{{ business.price }}</h2>
-						<h2 v-if="business.price && (business.is_closed || !business.is_closed)">-</h2>
-						<h2 v-if="business.is_closed">CLOSED</h2>
-						<h2 v-else>OPEN</h2>
+        <div class="businessInfo">
+          <div class="pricestatus">
+            <h2 v-if="business.price">{{ business.price }}</h2>
+            <h2 v-if="business.price && (business.is_closed || !business.is_closed)">-</h2>
+            <h2 v-if="business.is_closed">CLOSED</h2>
+            <h2 v-else>OPEN</h2>
           </div>
-					<div class="contact">
-						<h2>{{ business.display_phone }}</h2>
-					</div>
+          <div class="contact">
+            <h2>{{ business.display_phone }}</h2>
+          </div>
           <div class="location">
             <h2>{{ business.location.address1 }}</h2>
             <h2>{{ business.location.city}}, {{ business.location.state}}, {{ business.location.zip_code }}</h2>
@@ -30,20 +30,25 @@
           </div>
         </div>
       </div>
-			<div class="images">
-				<img v-for="(image, index) in business.photos" :key="index" :src="image" alt="business photo">
-			</div>
+      <div class="images">
+        <img
+          v-for="(image, index) in business.photos"
+          :key="index"
+          :src="image"
+          alt="business photo"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-    name: 'OneRestaurant',
-    props: {
-        business: Object
-    }
-}
+  name: "OneRestaurant",
+  props: {
+    business: Object
+  }
+};
 </script>
 
 <style scoped>
@@ -57,32 +62,32 @@ export default {
 }
 
 .contactCard {
-	background: #293250;
-	color: white;
+  background: #293250;
+  color: white;
   padding-bottom: 20px;
-	margin-bottom: 20px;
-	border-radius: 10px 10px 0px 0px;
+  margin-bottom: 20px;
+  border-radius: 10px 10px 0px 0px;
   padding-top: 20px;
 }
 
 .images {
-	border-radius: 0px 0px 10px 10px;
-	background: #212944;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	align-content: stretch;
-	align-items: center;
-	justify-content: center;
+  border-radius: 0px 0px 10px 10px;
+  background: #212944;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+  align-items: center;
+  justify-content: center;
 }
 
 .businessInfo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-wrap: wrap;
-	flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .title,
@@ -98,7 +103,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-	padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 #cat {
@@ -117,8 +122,8 @@ h1 {
 
 h2 {
   margin-left: 10px;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 h3 {
@@ -126,23 +131,23 @@ h3 {
 }
 
 #rate {
-	color: #ffd55a;
+  color: #ffd55a;
   margin-left: 10px;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 #star {
-	color: #ffd55a;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  color: #ffd55a;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 img {
-	box-shadow: 0px 0px 30px -4px rgba(255, 255, 255, 0.185);
-	margin: 5px 5px;
+  box-shadow: 0px 0px 30px -4px rgba(255, 255, 255, 0.185);
+  margin: 5px 5px;
   object-fit: cover;
-	width: 40%;
-	height: 40%;
+  width: 40%;
+  height: 40%;
 }
 </style>

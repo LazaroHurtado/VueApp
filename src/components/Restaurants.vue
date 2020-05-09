@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div v-for="business in businesses.data" :key="business.id" v-on:click="sendData(business.id)" class="businessCard">
+    <div
+      v-for="business in businesses.data"
+      :key="business.id"
+      v-on:click="sendData(business.id)"
+      class="businessCard"
+    >
       <div class="image">
         <img :src="business.image_url" :alt="business.name" />
       </div>
@@ -12,7 +17,7 @@
             <font-awesome-icon icon="star" id="star" />
           </div>
         </div>
-				<div class="businessInfo">
+        <div class="businessInfo">
           <div class="pricestatus">
             <h2 v-if="business.price">{{ business.price }}</h2>
             <h2 v-if="business.price && (business.is_closed || !business.is_closed)">-</h2>
@@ -40,9 +45,9 @@ export default {
     businesses: Object
   },
   methods: {
-		sendData(id) {
-			this.$router.push({path: `/restaurant/${id}`})
-		}
+    sendData(id) {
+      this.$router.push({ path: `/restaurant/${id}` });
+    }
   }
 };
 </script>
@@ -54,10 +59,10 @@ export default {
 }
 
 .lowerCard {
-	background: #293250;
-	color: white;
-	margin-bottom: 20px;
-	border-radius: 0px 0px 10px 10px;
+  background: #293250;
+  color: white;
+  margin-bottom: 20px;
+  border-radius: 0px 0px 10px 10px;
   padding-bottom: 10px;
 }
 
@@ -68,16 +73,16 @@ export default {
 }
 
 .businessInfo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
 }
 
 .image {
   border-bottom: 5px solid #6dd47e;
   margin: 0 auto;
-	max-height: 400px;
+  max-height: 400px;
   width: 100%;
   background: #6dd47e;
 }
@@ -113,8 +118,8 @@ h1 {
 
 h2 {
   margin-left: 10px;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 h3 {
@@ -122,16 +127,16 @@ h3 {
 }
 
 #rate {
-	color: #ffd55a;
+  color: #ffd55a;
   margin-left: 10px;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 #star {
-	color: #ffd55a;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  color: #ffd55a;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 img {

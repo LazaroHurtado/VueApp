@@ -1,44 +1,47 @@
 <template>
   <div id="app">
     <Header />
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import Header from '@/components/layout/Header.vue'
+import Header from "@/components/layout/Header.vue";
 
 export default {
-  name:"app",
+  name: "app",
   components: {
     Header
   },
   created() {
     if (this.$store.getters.token) {
-      this.$store.dispatch('fetchData')
-      .then(response => {
-        this.$store.dispatch("logUser", response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    } else if (this.$store.getters.refreshToken) {
-      this.$store.dispatch('resetTokens')
-      .then(response => {
-        this.$store.dispatch('fetchData')
+      this.$store
+        .dispatch("fetchData")
         .then(response => {
-          this.$store.dispatch("logUser", response.data)
+          this.$store.dispatch("logUser", response.data);
         })
         .catch(error => {
-        console.log(error)
-      })
-      })
-      .catch(error => {
-        console.log(error)
-      })
+          console.log(error);
+        });
+    } else if (this.$store.getters.refreshToken) {
+      this.$store
+        .dispatch("resetTokens")
+        .then(response => {
+          this.$store
+            .dispatch("fetchData")
+            .then(response => {
+              this.$store.dispatch("logUser", response.data);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
-}
+};
 </script>
 
 <style>

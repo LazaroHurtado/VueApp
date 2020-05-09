@@ -1,26 +1,26 @@
 <template>
   <div>
-    <Restaurants :businesses='this.data' />
+    <Restaurants :businesses="this.data" />
   </div>
 </template>
 
 <script>
-import Restaurants from '../components/Restaurants'
+import Restaurants from "../components/Restaurants";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     Restaurants
   },
   data() {
     return {
       data: {}
-    }
+    };
   },
   methods: {
     setData(data) {
       this.data = data;
-		},
+    }
   },
   created() {
     this.$store
@@ -32,5 +32,5 @@ export default {
         console.log(error);
       });
   }
-}
+};
 </script>

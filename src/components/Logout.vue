@@ -1,46 +1,45 @@
 <template>
-  <div class='logout'>
-    <button v-on:click="logout" id='logout'>Logout</button>
+  <div class="logout">
+    <button v-on:click="logout" id="logout">Logout</button>
   </div>
 </template>
 
 <script>
 export default {
-	name: 'Logout',
-	methods: {
-        logout() {
-            this.$store.dispatch('logout')
-            .then(response => {
-                this.$router.push({name: 'Home'})
-            }
-            )
-            .catch(error => {
-                console.log(error)
-            }
-            )
-        }
+  name: "Logout",
+  methods: {
+    logout() {
+      this.$store
+        .dispatch("logout")
+        .then(response => {
+          this.$router.push({ name: "Home" });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-}
+  }
+};
 </script>
 
 <style scoped>
-    .logout {
-        display: flex;
-    }
+.logout {
+  display: flex;
+}
 
-    #logout {
-        color: #293250;
-        text-align: center;
-        font-size: 15px;
-        height: 30px;
-        width: 80px;
-        border: 0;
-        outline: 0;
-        border-radius: 15px;
-        background: #FFD55A;
-    }
+#logout {
+  color: #293250;
+  text-align: center;
+  font-size: 15px;
+  height: 30px;
+  width: 80px;
+  border: 0;
+  outline: 0;
+  border-radius: 15px;
+  background: #ffd55a;
+}
 
-    button:hover {
-        cursor: pointer;
-    }
+button:hover {
+  cursor: pointer;
+}
 </style>

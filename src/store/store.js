@@ -118,7 +118,7 @@ export const store = new Vuex.Store({
             })
         },
         fetchData(context) {
-            let token = store.state.userAccount.token
+            let token = Vue.$cookies.get('token')
 
             let username = jwt_decode(token)['username']
 
@@ -184,6 +184,56 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.put('http://localhost:5000/auth/update_user', data, config)
                 .then(response => {
+                    if (data.updates.username) {
+                        store.dispatch('updateTokens', data.updates.username)
+                    } else {
+                        store.dispatch('fetchData')
+                    }
+                    resolve(response)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        updateTokens(context, username) {
+            let refreshTkn = Vue.$cookies.get("refresh_token")
+            axios.get(`http://localhost:5000/refresh/${refreshTkn}/${username}`)
+            .then(response => {
+                console.log(response)
+                Vue.$cookies.remove('token')
+                Vue.$cookies.remove('refresh_token')
+                setTimeout(() => {
+                    Vue.$cookies.set('token', response.data.token, "5M")
+                    Vue.$cookies.set('refresh_token', response.data.refresh_token, "7d")
+                  }, 500);
+                this.state.dispatch('fetchData')
+                .then(response => {
+                    console.log(response)
+                    this.store.dispatch('logUser', response.data)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+        delete(context, username) {
+            let config = {
+                headers: {
+                    token: Vue.$cookies.get("token")
+                }
+            }
+            return new Promise((resolve, reject) => {
+                axios.delete(`http://localhost:5000/auth/delete_user/${username}`, config)
+                .then(response => {
+                    Vue.$cookies.remove('token')
+                    Vue.$cookies.remove('refresh_token')
+                    this.state.userAccount.token = null
+                    this.state.userAccount.refreshToken = null
+                    this.state.userAccount.data = {}
                     resolve(response)
                 })
                 .catch(error => {

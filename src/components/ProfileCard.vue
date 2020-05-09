@@ -2,8 +2,9 @@
   <div class="container">
     <div v-if="!this.updateProfile" class="topbar">
       <Logout v-if="ownAccount" />
-      <div class="options">
+      <div v-if="ownAccount" class="options">
         <button v-if="this.toggleOptions" v-on:click="editProfile" id="options">Edit Profile</button>
+        <Delete v-if="this.toggleOptions" :username="data.username"/>
         <button v-else v-on:click="seeOptions" id="options">
           <font-awesome-icon icon="cog" id="cog" />
         </button>
@@ -31,6 +32,11 @@
           class="inputfile"
         />
     </div>
+    <div v-if="refreshEdits">
+      <h3 id="refreshedits">
+        Refresh page to view changes
+      </h3>
+    </div>
     <div class="userInfo" v-if="!this.updateProfile">
       <h1>@{{ data.username }}</h1>
       <h2>{{ data.first_name}} {{ data.last_name }}</h2>
@@ -45,7 +51,7 @@
       </div>
       <div id="inputoption">
         <label for="password">Password:</label>
-        <input type="text" name="password" placeholder="********" v-model="userInfo.username">
+        <input type="text" name="password" placeholder="********" v-model="userInfo.password">
       </div>
       <div id="inputoption">
         <label for="firstname">First Name:</label>
@@ -70,7 +76,7 @@
     </div>
     <div class="updateoption" v-if="this.updateProfile">
       <button v-on:click="editProfile" id="options">Cancel</button>
-      <Update :data="this.userInfo" :username="this.data.username" />
+      <Update v-on:click.native="editDone" :data="this.userInfo" :username="this.data.username" />
     </div>
   </div>
 </template>
@@ -78,17 +84,20 @@
 <script>
 import Logout from "../components/Logout.vue";
 import Update from "../components/Update.vue";
+import Delete from "../components/Delete.vue";
 
 export default {
   name: "ProfileCard",
   components: {
     Logout,
-    Update
+    Update,
+    Delete
   },
   data() {
     return {
       toggleOptions: false,
       updateProfile: false,
+      refreshEdits: false,
       userInfo: {
         image: "",
         username: "",
@@ -110,6 +119,13 @@ export default {
     }
   },
   methods: {
+    editDone() {
+      setTimeout(() => {
+        this.toggleOptions = !this.toggleOptions
+        this.updateProfile = !this.updateProfile
+        this.refreshEdits = true
+      }, 1000)
+    },
     onFileChange() {
       const input = this.$refs.fileInput;
       const files = input.files;
@@ -150,12 +166,20 @@ export default {
   color: #fff
 }
 
+#refreshedits {
+  color: #fff;
+}
+
 .labels, .inputs {
   display: flex;
   flex-direction: column;
 }
 
 label:hover {
+  cursor: pointer;
+}
+
+button:hover {
   cursor: pointer;
 }
 
