@@ -3,6 +3,8 @@
     <div class="businessCard">
       <div class="contactCard">
         <div class="title">
+          <font-awesome-icon icon="heart" v-if="!heartActive" v-on:click="addRestaurant(business)" class="heart"/>
+          <font-awesome-icon icon="heart" v-if="heartActive" v-on:click="removeRestaurant(business.id)" class="heart-active"/>
           <h1>{{ business.name }}</h1>
           <div class="rating">
             <h2 id="rate">{{ business.rating }}</h2>
@@ -45,8 +47,59 @@
 <script>
 export default {
   name: "OneRestaurant",
+  data() {
+    return {
+      heartActive: null
+    }
+  },
   props: {
     business: Object
+  },
+  methods: {
+    isActive() {
+      let id = this.$props.business.id
+      this.$store.dispatch('checkFavorites', id)
+      .then(response => {
+        if (response.data.status) {
+          this.heartActive = true
+        } else {
+          this.heartActive = false
+        }
+      })
+      .catch(error => {
+        console.log(error.response)
+        this.heartActive = false
+      })
+    },
+    addRestaurant(data) {
+      this.$store.dispatch('addRestaurant', data)
+      .then(response => {
+        if (response.data.status) {
+          this.heartActive = true
+        } else {
+          this.heartActive = false
+        }
+      })
+      .catch(error => {
+        this.heartActive = false
+      })
+    },
+    removeRestaurant(id) {
+      this.$store.dispatch('removeRestaurant', id)
+      .then(response => {
+        if (response.data.status) {
+          this.heartActive = false
+        } else {
+          this.heartActive = true
+        }
+      })
+      .catch(error => {
+        this.heartActive = true
+      })
+    }
+  },
+  created() {
+    this.isActive()
   }
 };
 </script>
@@ -149,5 +202,19 @@ img {
   object-fit: cover;
   width: 40%;
   height: 40%;
+}
+
+.heart {
+  color: #fff;
+  font-size: 25px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.heart-active {
+  color: crimson;
+  font-size: 25px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 </style>

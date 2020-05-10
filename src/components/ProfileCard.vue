@@ -1,28 +1,30 @@
 <template v-if="this.$props.data">
-  <div class="container">
-    <div v-if="!this.updateProfile" class="topbar">
-      <Logout v-if="ownAccount" />
-      <div v-if="ownAccount" class="options">
-        <button v-if="this.toggleOptions" v-on:click="editProfile" id="options">Edit Profile</button>
-        <Delete v-if="this.toggleOptions" :username="data.username"/>
-        <button v-else v-on:click="seeOptions" id="options">
-          <font-awesome-icon icon="cog" id="cog" />
-        </button>
+  <div>
+    <div class="profilecontainer">
+      <div v-if="!this.updateProfile" class="topbar">
+        <Logout v-if="ownAccount" />
+        <div v-if="ownAccount" class="options">
+          <button v-if="this.toggleOptions" v-on:click="editProfile" id="options">Edit Profile</button>
+          <Delete v-if="this.toggleOptions" :username="data.username" />
+          <font-awesome-icon v-if="this.toggleOptions" v-on:click="this.seeOptions" icon="times" id="times" />
+          <button v-else v-on:click="seeOptions" id="options">
+            <font-awesome-icon icon="cog" id="cog" />
+          </button>
+        </div>
       </div>
-    </div>
-    <div v-if="!this.updateProfile" class="profile">
-      <div class="imagediv">
-        <img :src="data.image" alt="profile picture" />
+      <div v-if="!this.updateProfile" class="profile">
+        <div class="imagediv">
+          <img :src="data.image" alt="profile picture" />
+        </div>
       </div>
-    </div>
-    <div v-if="this.updateProfile" class="profile">
-      <div class="imagediv">
-        <img :src="userInfo.image || data.image" alt="profile picture" />
-      </div>
-      <label for="img" id="uploadimg">
-        <font-awesome-icon icon="upload" id="uploadicon" />Upload image
-      </label>
-      <input
+      <div v-if="this.updateProfile" class="profile">
+        <div class="imagediv">
+          <img :src="userInfo.image || data.image" alt="profile picture" />
+        </div>
+        <label for="img" id="uploadimg">
+          <font-awesome-icon icon="upload" id="uploadicon" />Upload image
+        </label>
+        <input
           @change="onFileChange"
           type="file"
           ref="fileInput"
@@ -31,53 +33,73 @@
           accept="image/png, image/jpeg"
           class="inputfile"
         />
+      </div>
+      <div v-if="refreshEdits">
+        <h3 id="refreshedits">Refresh page to view changes</h3>
+      </div>
+      <div class="userInfo" v-if="!this.updateProfile">
+        <h1>@{{ data.username }}</h1>
+        <h2>{{ data.first_name}} {{ data.last_name }}</h2>
+        <h3>{{ data.address }}</h3>
+        <h3>{{ data.state }}, {{ data.city }}</h3>
+      </div>
+      <div class="userEdits" v-if="this.updateProfile">
+        <p>Leave what you don't want to update empty</p>
+        <div id="inputoption">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            name="username"
+            :placeholder="[[ data.username ]]"
+            v-model="userInfo.username"
+          />
+        </div>
+        <div id="inputoption">
+          <label for="password">Password:</label>
+          <input type="text" name="password" placeholder="********" v-model="userInfo.password" />
+        </div>
+        <div id="inputoption">
+          <label for="firstname">First Name:</label>
+          <input
+            type="text"
+            name="firstname"
+            :placeholder="[[ data.first_name ]]"
+            v-model="userInfo.first_name"
+          />
+        </div>
+        <div id="inputoption">
+          <label for="lastname">Last Name:</label>
+          <input
+            type="text"
+            name="lastname"
+            :placeholder="[[ data.last_name ]]"
+            v-model="userInfo.last_name"
+          />
+        </div>
+        <div id="inputoption">
+          <label for="address">Address:</label>
+          <input
+            type="text"
+            name="address"
+            :placeholder="[[ data.address ]]"
+            v-model="userInfo.address"
+          />
+        </div>
+        <div id="inputoption">
+          <label for="state">State:</label>
+          <input type="text" name="state" :placeholder="[[ data.state ]]" v-model="userInfo.state" />
+        </div>
+        <div id="inputoption">
+          <label for="city">City:</label>
+          <input type="text" name="city" :placeholder="[[ data.city ]]" v-model="userInfo.city" />
+        </div>
+      </div>
+      <div class="updateoption" v-if="this.updateProfile">
+        <button v-on:click="editProfile" id="options">Cancel</button>
+        <Update v-on:click.native="editDone" :data="this.userInfo" :username="this.data.username" />
+      </div>
     </div>
-    <div v-if="refreshEdits">
-      <h3 id="refreshedits">
-        Refresh page to view changes
-      </h3>
-    </div>
-    <div class="userInfo" v-if="!this.updateProfile">
-      <h1>@{{ data.username }}</h1>
-      <h2>{{ data.first_name}} {{ data.last_name }}</h2>
-      <h3>{{ data.address }}</h3>
-      <h3>{{ data.state }}, {{ data.city }}</h3>
-    </div>
-    <div class="userEdits" v-if="this.updateProfile">
-      <p>Leave what you don't want to update empty</p>
-      <div id="inputoption">
-        <label for="username">Username:</label>
-        <input type="text" name="username" :placeholder="[[ data.username ]]" v-model="userInfo.username">
-      </div>
-      <div id="inputoption">
-        <label for="password">Password:</label>
-        <input type="text" name="password" placeholder="********" v-model="userInfo.password">
-      </div>
-      <div id="inputoption">
-        <label for="firstname">First Name:</label>
-        <input type="text" name="firstname" :placeholder="[[ data.first_name ]]" v-model="userInfo.first_name">
-      </div>
-      <div id="inputoption">
-        <label for="lastname">Last Name:</label>
-        <input type="text" name="lastname" :placeholder="[[ data.last_name ]]" v-model="userInfo.last_name">
-      </div>
-      <div id="inputoption">
-        <label for="address">Address:</label>
-        <input type="text" name="address" :placeholder="[[ data.address ]]" v-model="userInfo.address">
-      </div>
-      <div id="inputoption">
-        <label for="state">State:</label>
-        <input type="text" name="state" :placeholder="[[ data.state ]]" v-model="userInfo.state">
-      </div>
-      <div id="inputoption">
-        <label for="city">City:</label>
-        <input type="text" name="city" :placeholder="[[ data.city ]]" v-model="userInfo.city">
-      </div>
-    </div>
-    <div class="updateoption" v-if="this.updateProfile">
-      <button v-on:click="editProfile" id="options">Cancel</button>
-      <Update v-on:click.native="editDone" :data="this.userInfo" :username="this.data.username" />
-    </div>
+    <Favorites v-if="!this.updateProfile" />
   </div>
 </template>
 
@@ -85,13 +107,15 @@
 import Logout from "../components/Logout.vue";
 import Update from "../components/Update.vue";
 import Delete from "../components/Delete.vue";
+import Favorites from "../components/Favorites.vue"
 
 export default {
   name: "ProfileCard",
   components: {
     Logout,
     Update,
-    Delete
+    Delete,
+    Favorites
   },
   data() {
     return {
@@ -106,9 +130,9 @@ export default {
         last_name: "",
         address: "",
         city: "",
-        state: "",
+        state: ""
       }
-    }
+    };
   },
   props: {
     data: Object
@@ -121,10 +145,10 @@ export default {
   methods: {
     editDone() {
       setTimeout(() => {
-        this.toggleOptions = !this.toggleOptions
-        this.updateProfile = !this.updateProfile
-        this.refreshEdits = true
-      }, 1000)
+        this.toggleOptions = !this.toggleOptions;
+        this.updateProfile = !this.updateProfile;
+        this.refreshEdits = true;
+      }, 1000);
     },
     onFileChange() {
       const input = this.$refs.fileInput;
@@ -138,11 +162,10 @@ export default {
       }
     },
     seeOptions() {
-      console.log(this.userInfo.username)
-      this.toggleOptions = true
+      this.toggleOptions = !this.toggleOptions;
     },
     editProfile() {
-      this.updateProfile = !this.updateProfile
+      this.updateProfile = !this.updateProfile;
     }
   }
 };
@@ -162,15 +185,17 @@ export default {
   z-index: -1;
 }
 
-#uploadimg, #uploadicon {
-  color: #fff
+#uploadimg,
+#uploadicon {
+  color: #fff;
 }
 
 #refreshedits {
   color: #fff;
 }
 
-.labels, .inputs {
+.labels,
+.inputs {
   display: flex;
   flex-direction: column;
 }
@@ -196,7 +221,6 @@ button:hover {
 
 .options {
   display: flex;
-
 }
 
 .imagediv {
@@ -214,6 +238,19 @@ button:hover {
   outline: 0;
   border-radius: 15px;
   background: #6dd47e;
+}
+
+#times {
+  color: #293250;
+  text-align: center;
+  font-size: 15px;
+  height: 30px;
+  padding: 0 10px;
+  margin-left: 20px;
+  border: 0;
+  outline: 0;
+  border-radius: 15px;
+  background: #fc5918;
 }
 
 img {
@@ -236,7 +273,7 @@ h2 {
   margin-bottom: 5px;
 }
 
-.container {
+.profilecontainer {
   border-radius: 10px;
   margin-top: 25px;
   margin-left: auto;

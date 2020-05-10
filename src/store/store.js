@@ -109,7 +109,6 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.get(`http://localhost:5000/find_businesses/${location}`)
                     .then(response => {
-                        console.log('user location used')
                         resolve(response)
                     })
                     .catch(error => {
@@ -234,6 +233,73 @@ export const store = new Vuex.Store({
                     this.state.userAccount.token = null
                     this.state.userAccount.refreshToken = null
                     this.state.userAccount.data = {}
+                    resolve(response)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        checkFavorites(context, restaurantId) {
+            let config = {
+                headers: {
+                    token: Vue.$cookies.get("token")
+                }
+            }
+            let userFavoriteId = this.state.userAccount.data.favorites_id
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/auth/check_favorites/${userFavoriteId}/${restaurantId}`, config)
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        addRestaurant(context, businessData) {
+            let userFavoriteId = this.state.userAccount.data.favorites_id
+            let config = {
+                headers: {
+                    token: Vue.$cookies.get("token")
+                }
+            }
+            let data = {
+                "favorite_id": userFavoriteId,
+                "restaurant_id": businessData
+            }
+            return new Promise((resolve, reject) => {
+                axios.put('http://localhost:5000/auth/add_favorite', data, config)
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        removeRestaurant(context, businessId) {
+            let userFavoriteId = this.state.userAccount.data.favorites_id
+            let config = {
+                headers: {
+                    token: Vue.$cookies.get("token")
+                }
+            }
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/auth/remove_favorite/${userFavoriteId}/${businessId}`, config)
+                .then(response => {
+                    resolve(response)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        getFavorites(context) {
+            let userFavoriteId = this.state.userAccount.data.favorites_id
+            return new Promise((resolve, reject) => {
+                axios.get(`http://localhost:5000/find_favorites/${userFavoriteId}`)
+                .then(response => {
                     resolve(response)
                 })
                 .catch(error => {

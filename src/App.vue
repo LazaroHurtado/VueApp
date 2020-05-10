@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <router-view />
+    <router-view v-if="!loading" />
   </div>
 </template>
 
@@ -10,6 +10,11 @@ import Header from "@/components/layout/Header.vue";
 
 export default {
   name: "app",
+  data() {
+    return {
+      loading: true
+    }
+  },
   components: {
     Header
   },
@@ -18,7 +23,13 @@ export default {
       this.$store
         .dispatch("fetchData")
         .then(response => {
-          this.$store.dispatch("logUser", response.data);
+          this.$store.dispatch("logUser", response.data)
+          .then(response => {
+            this.loading = false
+          })
+          .catch(error => {
+            this.loading = true
+          })
         })
         .catch(error => {
           console.log(error);
@@ -30,7 +41,13 @@ export default {
           this.$store
             .dispatch("fetchData")
             .then(response => {
-              this.$store.dispatch("logUser", response.data);
+              this.$store.dispatch("logUser", response.data)
+              .then(response => {
+                this.loading = false
+              })
+              .catch(error => {
+                this.loading = true
+              })
             })
             .catch(error => {
               console.log(error);

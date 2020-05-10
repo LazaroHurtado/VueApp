@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-for="business in businesses.data"
+      v-for="business in businesses"
       :key="business.id"
       v-on:click="sendData(business.id)"
       class="businessCard"
@@ -42,7 +42,7 @@
 export default {
   name: "Restaurants",
   props: {
-    businesses: Object
+    businesses: [Object, Array]
   },
   methods: {
     sendData(id) {
@@ -63,7 +63,7 @@ export default {
   color: white;
   margin-bottom: 20px;
   border-radius: 0px 0px 10px 10px;
-  padding-bottom: 10px;
+  padding: 10px 10px;
 }
 
 .pricestatus {

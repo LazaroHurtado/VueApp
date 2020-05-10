@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     setData(data) {
-      this.data = data;
+      this.data = data.data;
     }
   },
   created() {

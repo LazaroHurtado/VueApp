@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OneRestaurant :business="this.data" />
+    <OneRestaurant v-if="this.data" :business="this.data" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   name: "Restaurant",
   data() {
     return {
-      data: {}
+      data: null
     };
   },
   components: {
