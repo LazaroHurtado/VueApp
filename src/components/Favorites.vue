@@ -1,9 +1,12 @@
 <template>
   <div v-if="this.favoritesArray" class="favoritecontainer">
-    <h1 class="favorites">Favorites</h1>
-    <div v-for="favorite in this.favoritesArray" :key="favorite.id" class="eachFavorite">
+    <h1 class="favorites">Favorites ({{this.favoritesArray.length}})</h1>
+    <div v-if="this.noFavorites">
+      <div v-for="favorite in this.favoritesArray" :key="favorite.id" class="eachFavorite">
         <Restaurants :businesses="[favorite]" />
+      </div>
     </div>
+    <h2 v-else>Favorite Restaurants to View Them Here</h2>
   </div>
 </template>
 
@@ -15,25 +18,17 @@ export default {
   components: {
     Restaurants
   },
-  data() {
-      return {
-          favoritesArray: null,
-      }
+  props: {
+    favoritesArray: Array
   },
-  methods: {
-      getFavorites() {
-          this.$store.dispatch('getFavorites')
-          .then(response => {
-              console.log(response.data)
-              this.favoritesArray = response.data.favorites
-          })
-          .catch(error => {
-              console.log(error.response)
-          })
+  computed: {
+    noFavorites() {
+      if (this.favoritesArray.length < 1) {
+        return false
+      } else {
+        return true
       }
-  },
-  created() {
-      this.getFavorites()
+    }
   }
 };
 </script>
@@ -53,9 +48,8 @@ export default {
 }
 
 .favorites {
-    color: #293250;
-    margin: 0;
-    border-bottom: 5px solid #6dd47e;
+  color: #293250;
+  margin: 0;
+  border-bottom: 5px solid #6dd47e;
 }
-
 </style>

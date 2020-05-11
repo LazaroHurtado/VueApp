@@ -99,7 +99,7 @@
         <Update v-on:click.native="editDone" :data="this.userInfo" :username="this.data.username" />
       </div>
     </div>
-    <Favorites v-if="!this.updateProfile" />
+    <Favorites v-if="!this.updateProfile" :favoritesArray="this.favoritesArray" />
   </div>
 </template>
 
@@ -135,7 +135,8 @@ export default {
     };
   },
   props: {
-    data: Object
+    data: Object,
+    favoritesArray: Array
   },
   computed: {
     ownAccount() {

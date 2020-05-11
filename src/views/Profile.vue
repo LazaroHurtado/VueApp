@@ -1,7 +1,7 @@
 <template>
   <div>
-    <ProfileCard v-if="this.data" :data="this.data" />
-    <h1 v-else>{{ this.errorData.message }}</h1>
+    <ProfileCard v-if="this.data" :data="this.data" :favoritesArray="this.favoritesArray" />
+    <h1 v-if="errorData">{{ this.errorData.message }}</h1>
   </div>
 </template>
 
@@ -12,8 +12,9 @@ export default {
   name: "Profile",
   data() {
     return {
-      data: {},
-      errorData: {}
+      data: null,
+      favoritesArray: null,
+      errorData: null
     };
   },
   components: {
@@ -28,12 +29,22 @@ export default {
         .dispatch("findUser", username)
         .then(response => {
           this.data = response.data;
-          console.log(this.data);
+          this.getFavorites()
         })
         .catch(error => {
           this.data = null;
           this.errorData = error.response.data;
           console.log(error);
+        });
+    },
+    getFavorites() {
+      this.$store
+        .dispatch("getFavorites", this.data.username)
+        .then(response => {
+          this.favoritesArray = response.data.favorites;
+        })
+        .catch(error => {
+          console.log(error.response);
         });
     }
   },

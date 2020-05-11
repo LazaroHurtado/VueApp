@@ -88,7 +88,6 @@ export default {
         this.address,
         this.image
       ];
-      console.log(data)
       const empty = input => input === "";
       this.error = data.some(empty);
       this.errorMsg = "*Please fill out all boxes";

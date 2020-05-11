@@ -295,10 +295,9 @@ export const store = new Vuex.Store({
                 })
             })
         },
-        getFavorites(context) {
-            let userFavoriteId = this.state.userAccount.data.favorites_id
+        getFavorites(context, username) {
             return new Promise((resolve, reject) => {
-                axios.get(`http://localhost:5000/find_favorites/${userFavoriteId}`)
+                axios.get(`http://localhost:5000/find_favorites/${username}`)
                 .then(response => {
                     resolve(response)
                 })
